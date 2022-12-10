@@ -1,0 +1,26 @@
+maillog_file = /dev/stdout
+smtp_helo_name = {{ .Env.POSTFIX_SMTP_HELO_NAME }}
+myorigin = {{ .Env.POSTFIX_MYORIGIN }}
+
+smtpd_banner = $myhostname ESMTP
+biff = no
+append_dot_mydomain = no
+readme_directory = no
+
+compatibility_level = 2
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = {{ .Env.POSTFIX_HOSTNAME }}
+mydestination = localhost.localdomain, localhost
+mynetworks = {{ .Env.NETWORKS }}
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = ipv4
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = static:apikey:{{ .Env.SENDGRID_API_KEY }}
+smtp_sasl_security_options = noanonymous
+smtp_sasl_tls_security_options = noanonymous
+smtp_tls_security_level = encrypt
+header_size_limit = 4096000
+relayhost = [smtp.sendgrid.net]:587
